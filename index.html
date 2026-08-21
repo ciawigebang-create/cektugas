@@ -213,8 +213,8 @@
     lucide.createIcons();
 
     // Configuration
-    const apiKey = prompt("Silakan masukkan Password Anda untuk menggunakan aplikasi ini:");
-    
+    const rawKey = prompt("Silakan masukkan Password (API Key) Anda untuk menggunakan aplikasi ini:");
+const apiKey = rawKey ? rawKey.trim() : "";
     // Application State
     let originalFileObj = null; // { name, text }
     let tasksList = [ createEmptyTask() ]; // Array of task objects
