@@ -523,7 +523,8 @@ PENTING: Gabungan seluruh "text" pada "analyzedText" HARUS sama persis dengan te
                 const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 
                 if (jsonText) {
-                    task.result = JSON.parse(jsonText);
+                    const cleanJson = jsonText.replace(/```json/g, '').replace(/```/g, '').trim();
+task.result = JSON.parse(cleanJson);
                     task.isAnalyzing = false;
                     success = true;
                 } else {
@@ -546,13 +547,14 @@ PENTING: Gabungan seluruh "text" pada "analyzedText" HARUS sama persis dengan te
     }
 
     async function analyzeAll() {
-        // Run sequentially to not overwhelm API
-        for (const task of tasksList) {
-            if (!task.result && task.text.trim()) {
-                await analyzeText(task.id);
-            }
+    for (const task of tasksList) {
+        if (!task.result && task.text.trim()) {
+            await analyzeText(task.id);
+            // Memberikan waktu istirahat 3 detik agar server Google tidak menolak permintaan
+            await new Promise(r => setTimeout(r, 3000));
         }
     }
+}
 
     function generateReportHTML(task) {
         let highlightedHtml = '';
